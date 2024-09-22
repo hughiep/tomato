@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,13 +6,14 @@ import (
 	"github.com/hughiep/tomato-payment-service/pkg/logger"
 )
 
-func main() {
+func App() {
 	router := gin.Default()
 
 	// Config
-	appConfig := config.New()
+	config.New()
 	// Logger
-	appLogger := logger.New()
+	logger.New()
+
 	// Router
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
