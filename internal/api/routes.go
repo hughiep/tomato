@@ -1,12 +1,17 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/hughiep/tomato-payment-service/internal/api/tasks"
+	"github.com/labstack/echo/v4"
+)
 
-func New() {
+func Init() *echo.Echo {
 	// Router
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, world!",
-		})
-	})
+	router := echo.New()
+
+	// Routes
+	r := router.Group("/v1") // API version
+	tasks.Router(r)
+
+	return router
 }

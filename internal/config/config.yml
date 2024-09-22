@@ -1,0 +1,6 @@
+app:
+  env: "production"
+  # env: PORT
+  # type: string
+  # description: Port to run the application
+  port: "8080"
