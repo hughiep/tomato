@@ -4,3 +4,28 @@ app:
   # type: string
   # description: Port to run the application
   port: "8080"
+database:
+  # env: DATABASE_MYSQL_PORT
+  # type: integer
+  # description: Database mysql port
+  mysql_port: 3306
+  # env: DATABASE_MYSQL_HOST
+  # type: string
+  # description: Database mysql host
+  mysql_host: "database"
+  # env: DATABASE_MYSQLUSER
+  # type: string
+  # description: Database mysql db name
+  mysqlname: "payment_service"
+  # env: DATABASE_MYSQLUSER
+  # type: integer
+  # description: Database mysql user
+  mysqluser: "payment_service"
+  # env: DATABASE_MYSQLPASSWORD
+  # type: string
+  # description: Database mysql password
+  mysqlpassword: "password"
+  # env: DATABASE_MYSQL_ROOT_PASSWORD
+  # type: string
+  # description: Database mysql root password
+  mysql_root_password: "root_password"

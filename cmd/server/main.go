@@ -5,6 +5,7 @@ import (
 
 	"github.com/hughiep/tomato-payment-service/internal/api"
 	"github.com/hughiep/tomato-payment-service/internal/config"
+	"github.com/hughiep/tomato-payment-service/internal/db"
 )
 
 func App() {
@@ -15,6 +16,9 @@ func App() {
 
 	// Router
 	router := api.Init()
+
+	// Database
+	db.Connect(c)
 
 	// Middleware
 
