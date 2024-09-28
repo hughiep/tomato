@@ -29,9 +29,9 @@ type Config struct {
 func (c *Config) Bind() {
 	c.App.Port = os.Getenv("PORT")
 
-	c.Database.MysqlDbName = os.Getenv("DATABASE_MYSQLNAME")
-	c.Database.MySqlDbUser = os.Getenv("DATABASE_MYSQLUSER")
-	c.Database.MySqlDbPassword = os.Getenv("DATABASE_MYSQLPASSWORD")
+	c.Database.MysqlDbName = os.Getenv("DATABASE_MYSQL_NAME")
+	c.Database.MySqlDbUser = os.Getenv("DATABASE_MYSQL_USER")
+	c.Database.MySqlDbPassword = os.Getenv("DATABASE_MYSQL_PASSWORD")
 	c.Database.MySqlDbRootPassword = os.Getenv("DATABASE_MYSQL_ROOT_PASSWORD")
 }
 

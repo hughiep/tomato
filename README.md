@@ -4,6 +4,13 @@
 
 [ ] MySQL
 [ ] GORM
+[ ] Migrate
+
+```bash
+docker run -v internal/db/migration:/migrations --network 127.0.0.1 migrate/migrate
+    -path=/migrations/ -database mysql://localhost:5432/database up
+```
+
 [ ] Echo
 [ ] Docker
 [ ] Docker Compose

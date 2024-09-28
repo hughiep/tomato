@@ -1,5 +1,1 @@
-.env
-
-# Build
-bin/
 internal/db/mysql_data

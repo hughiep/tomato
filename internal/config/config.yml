@@ -13,15 +13,15 @@ database:
   # type: string
   # description: Database mysql host
   mysql_host: "database"
-  # env: DATABASE_MYSQLUSER
+  # env: DATABASE_MYSQL_USER
   # type: string
   # description: Database mysql db name
   mysqlname: "payment_service"
-  # env: DATABASE_MYSQLUSER
+  # env: DATABASE_MYSQL_USER
   # type: integer
   # description: Database mysql user
   mysqluser: "payment_service"
-  # env: DATABASE_MYSQLPASSWORD
+  # env: DATABASE_MYSQL_PASSWORD
   # type: string
   # description: Database mysql password
   mysqlpassword: "password"

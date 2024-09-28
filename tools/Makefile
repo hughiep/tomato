@@ -1,0 +1,2 @@
+inspect:
+	/atlas.exe
