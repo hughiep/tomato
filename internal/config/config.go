@@ -33,6 +33,8 @@ func (c *Config) Bind() {
 	c.Database.MySqlDbUser = os.Getenv("DATABASE_MYSQL_USER")
 	c.Database.MySqlDbPassword = os.Getenv("DATABASE_MYSQL_PASSWORD")
 	c.Database.MySqlDbRootPassword = os.Getenv("DATABASE_MYSQL_ROOT_PASSWORD")
+	c.Database.MysqlDbHost = os.Getenv("DATABASE_MYSQL_HOST")
+	c.Database.MysqlDbPort = os.Getenv("DATABASE_MYSQL_PORT")
 }
 
 func Load() *Config {

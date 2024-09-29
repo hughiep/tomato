@@ -18,6 +18,7 @@ RUN go mod download
 COPY . ./
 
 RUN mkdir -p /api \
+  && go install \
   && go build -o /api .
 
 # Copy the binary to the runtime image
@@ -40,4 +41,4 @@ USER api
 
 RUN ls -la ${WORK_DIR}/bin/payment-api
 
-ENTRYPOINT [ "./bin/payment-api/tomato-payment-service" ]
+ENTRYPOINT [ "./bin/payment-api/tomato" ]

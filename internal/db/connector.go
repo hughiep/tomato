@@ -4,10 +4,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hughiep/tomato-payment-service/internal/config"
+	"tomato/internal/config"
+	"tomato/pkg/logger"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+var db *gorm.DB
+
+func GetDB() *gorm.DB {
+	return db
+}
 
 func dbURL(c *config.Config) string {
 	// Get the database URL
@@ -20,13 +28,14 @@ func dbURL(c *config.Config) string {
 	)
 }
 
-func Connect(c *config.Config) *gorm.DB {
+func Connect(c *config.Config) {
 	// Connect to the database
 	dsn := dbURL(c)
 	connection := mysql.Open(dsn)
 	mysql, err := gorm.Open(connection, &gorm.Config{})
 	if err != nil {
-		panic("Failed to connect to database")
+		logger.Logger.Error(dsn)
+		panic("Failed to connect to database" + dsn)
 	}
 
 	rawDB, err := mysql.DB()
@@ -43,5 +52,5 @@ func Connect(c *config.Config) *gorm.DB {
 	// Set the maximum lifetime of a connection
 	rawDB.SetConnMaxLifetime(time.Hour)
 
-	return mysql
+	db = mysql
 }
