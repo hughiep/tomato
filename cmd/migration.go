@@ -44,7 +44,7 @@ var MigrationCommand = &cli.Command{
 
 func getMigrationDatabaseURL() string {
 	configs := config.Load()
-	host := "127.0.0.1"
+	host := configs.Database.MysqlDbHost
 	port := configs.Database.MysqlDbPort
 	database := configs.Database.MysqlDbName
 	username := "root"

@@ -29,17 +29,21 @@ func NewPaymentHandler(db *gorm.DB) *PaymentHandler {
 func (h *PaymentHandler) CheckoutSession(c echo.Context) error {
 	// TODO: Retrieve from user session
 	userId := c.Param("user")
-	user := h.UserRepo.GetUserByID(userId)
+	user, err := h.UserRepo.GetUserByID(userId)
 
-	// Create a new customer if one doesn't exist
-	customerID := createCustomer(user.Email)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, "User not found")
+	}
 
-	// Save the customer ID to the user
-	h.UserRepo.UpdateCustomerID(user.ID, customerID)
+	if user.StripeCustomerID == "" {
+		// Create a new customer if one doesn't exist
+		customerID := createCustomer(user.Email)
+		// Save the customer ID to the user
+		h.UserRepo.UpdateCustomerID(user.ID, customerID)
+	}
 
 	// Create a new checkout session
-	checkoutUrl := createCheckoutSession()
-
+	checkoutUrl := createCheckoutSession(user.StripeCustomerID)
 	return c.JSON(http.StatusOK, checkoutUrl)
 }
 

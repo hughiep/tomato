@@ -27,9 +27,10 @@ func createCustomer(email string) string {
 	return c.ID
 }
 
-func createCheckoutSession() string {
+func createCheckoutSession(customer string) string {
 	domain := "http://localhost:4242"
 	params := &stripe.CheckoutSessionParams{
+		Customer: stripe.String(customer),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
 			{
 				// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
@@ -40,9 +41,6 @@ func createCheckoutSession() string {
 		Mode:       stripe.String(string(stripe.CheckoutSessionModeSubscription)),
 		SuccessURL: stripe.String(domain + "/success"),
 		CancelURL:  stripe.String(domain + "/cancel"),
-		Metadata: map[string]string{
-			"User": "user_123",
-		},
 	}
 
 	s, err := session.New(params)

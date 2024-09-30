@@ -1,10 +1,21 @@
 package logger
 
-import "go.uber.org/zap"
+import (
+	"tomato/internal/config"
 
-func init() {
-	zap.ReplaceGlobals(zap.Must(zap.NewProduction()))
+	"go.uber.org/zap"
+)
+
+func Init(cfg *config.Config) error {
+	var zcfg zap.Config
+
+	logger, err := zcfg.Build()
+	if err != nil {
+		return err
+	}
+	defer logger.Sync()
+
+	zap.ReplaceGlobals(logger)
+
+	return nil
 }
-
-// Logger is a global logger
-var Logger = zap.L()

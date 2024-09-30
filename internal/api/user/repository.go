@@ -18,16 +18,16 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
-func (r *UserRepository) GetUserByID(id string) models.User {
+func (r *UserRepository) GetUserByID(id string) (models.User, error) {
 	var user models.User
 	result := r.DB.First(&user, id)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		fmt.Println("User not found")
-		return models.User{}
+		return models.User{}, result.Error
 	}
 
-	return user
+	return user, nil
 }
 
 func (r *UserRepository) UpdateUserRole(customerId string, role models.UserRole) {

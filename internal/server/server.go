@@ -9,13 +9,17 @@ import (
 	"tomato/internal/api"
 	"tomato/internal/config"
 	"tomato/internal/db"
+	"tomato/pkg/logger"
 )
 
-func App() {
+func Serve() error {
 
 	// Config
 	c := config.Load()
 	// Logger
+	if err := logger.Init(c); err != nil {
+		return err
+	}
 
 	// Database
 	db := db.Connect(c)
@@ -24,6 +28,7 @@ func App() {
 	router := api.SetUpRouter(db)
 
 	// Middleware
+	// TODO: Add middleware
 
 	// Graceful shutdown
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
@@ -42,4 +47,6 @@ func App() {
 	if err := router.Shutdown(ctx); err != nil {
 		router.Logger.Fatal(err)
 	}
+
+	return nil
 }
