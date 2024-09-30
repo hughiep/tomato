@@ -1,7 +1,10 @@
 package server
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/signal"
 
 	"tomato/internal/api"
 	"tomato/internal/config"
@@ -14,14 +17,29 @@ func App() {
 	c := config.Load()
 	// Logger
 
-	// Router
-	router := api.Init()
-
 	// Database
-	db.Connect(c)
+	db := db.Connect(c)
+
+	// Router
+	router := api.SetUpRouter(db)
 
 	// Middleware
 
-	fmt.Printf(":%s", c.App.Port)
-	router.Start(fmt.Sprintf(":%s", c.App.Port))
+	// Graceful shutdown
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
+	go func() {
+		if err := router.Start(fmt.Sprintf(":%s", c.App.Port)); err != nil {
+			router.Logger.Info("shutting down the server")
+		}
+	}()
+
+	<-ctx.Done()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5)
+	defer cancel()
+	if err := router.Shutdown(ctx); err != nil {
+		router.Logger.Fatal(err)
+	}
 }

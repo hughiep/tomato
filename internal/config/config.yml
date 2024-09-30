@@ -12,19 +12,19 @@ database:
   # env: DATABASE_MYSQL_HOST
   # type: string
   # description: Database mysql host
-  mysql_host: "database"
+  mysql_host: "127.0.0.1"
   # env: DATABASE_MYSQL_USER
   # type: string
   # description: Database mysql db name
-  mysqlname: "payment_service"
+  mysql_name: "payment_service"
   # env: DATABASE_MYSQL_USER
   # type: integer
   # description: Database mysql user
-  mysqluser: "payment_service"
+  mysql_user: "payment_service"
   # env: DATABASE_MYSQL_PASSWORD
   # type: string
   # description: Database mysql password
-  mysqlpassword: "password"
+  mysql_password: "payment_service"
   # env: DATABASE_MYSQL_ROOT_PASSWORD
   # type: string
   # description: Database mysql root password

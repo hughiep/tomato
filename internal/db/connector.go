@@ -11,12 +11,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-func GetDB() *gorm.DB {
-	return db
-}
-
 func dbURL(c *config.Config) string {
 	// Get the database URL
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
@@ -28,17 +22,17 @@ func dbURL(c *config.Config) string {
 	)
 }
 
-func Connect(c *config.Config) {
+func Connect(c *config.Config) *gorm.DB {
 	// Connect to the database
 	dsn := dbURL(c)
-	connection := mysql.Open(dsn)
-	mysql, err := gorm.Open(connection, &gorm.Config{})
+	dbConnection := mysql.Open(dsn)
+	db, err := gorm.Open(dbConnection, &gorm.Config{})
 	if err != nil {
 		logger.Logger.Error(dsn)
-		panic("Failed to connect to database" + dsn)
+		panic("Failed to connect to database " + dsn)
 	}
 
-	rawDB, err := mysql.DB()
+	rawDB, err := db.DB()
 	if err != nil {
 		panic("Failed to get raw database")
 	}
@@ -52,5 +46,7 @@ func Connect(c *config.Config) {
 	// Set the maximum lifetime of a connection
 	rawDB.SetConnMaxLifetime(time.Hour)
 
-	db = mysql
+	fmt.Println("Connected to database", db, db == nil)
+
+	return db
 }

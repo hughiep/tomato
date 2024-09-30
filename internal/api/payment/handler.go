@@ -7,31 +7,43 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"tomato/internal/api/user"
+	"tomato/internal/models"
 
 	"github.com/labstack/echo/v4"
 	"github.com/stripe/stripe-go/v79"
 	"github.com/stripe/stripe-go/v79/webhook"
+	"gorm.io/gorm"
 )
 
 type PaymentHandler struct {
-	Repository *PaymentRepository
+	UserRepo *user.UserRepository
 }
 
-func NewPaymentHandler() *PaymentHandler {
+func NewPaymentHandler(db *gorm.DB) *PaymentHandler {
 	return &PaymentHandler{
-		Repository: NewPaymentRepository(),
+		UserRepo: user.NewUserRepository(db),
 	}
 }
 
 func (h *PaymentHandler) CheckoutSession(c echo.Context) error {
+	// TODO: Retrieve from user session
+	userId := c.Param("user")
+	user := h.UserRepo.GetUserByID(userId)
+
+	// Create a new customer if one doesn't exist
+	customerID := createCustomer(user.Email)
+
+	// Save the customer ID to the user
+	h.UserRepo.UpdateCustomerID(user.ID, customerID)
+
+	// Create a new checkout session
 	checkoutUrl := createCheckoutSession()
 
 	return c.JSON(http.StatusOK, checkoutUrl)
 }
 
 func (h *PaymentHandler) Webhook(c echo.Context) error {
-	const MaxBodyBytes = int64(65536)
-
 	req := c.Request()
 	payload, err := io.ReadAll(req.Body)
 	if err != nil {
@@ -70,21 +82,14 @@ func (h *PaymentHandler) Webhook(c echo.Context) error {
 			c.Response().WriteHeader(http.StatusBadRequest)
 			return err
 		}
+
 		log.Printf("Successful payment for %d.", paymentIntent.Amount)
-		// Add
+		// Update user role
+		h.UserRepo.UpdateUserRole(paymentIntent.Customer.ID, models.Premium)
 
 		// Then define and call a func to handle the successful payment intent.
 		// handlePaymentIntentSucceeded(paymentIntent)
-	case "payment_method.attached":
-		var paymentMethod stripe.PaymentMethod
-		err := json.Unmarshal(event.Data.Raw, &paymentMethod)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing webhook JSON: %v\n", err)
-			c.Response().WriteHeader(http.StatusBadRequest)
-			return err
-		}
-		// Then define and call a func to handle the successful attachment of a PaymentMethod.
-		// handlePaymentMethodAttached(paymentMethod)
+
 	default:
 		fmt.Fprintf(os.Stderr, "Unhandled event type: %s\n", event.Type)
 	}

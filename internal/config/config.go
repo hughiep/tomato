@@ -2,6 +2,7 @@ package config
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"os"
 
@@ -17,24 +18,34 @@ type Config struct {
 	} `yaml:"app"`
 
 	Database struct {
-		MysqlDbHost         string `yaml:"mysqlhost"`
-		MysqlDbPort         string `yaml:"mysqlport"`
-		MysqlDbName         string `yaml:"mysqlname"`
-		MySqlDbUser         string `yaml:"mysqluser"`
-		MySqlDbPassword     string `yaml:"mysqlpassword"`
-		MySqlDbRootPassword string `yaml:"mysqlroot_password"`
+		MysqlDbHost         string `yaml:"mysql_host"`
+		MysqlDbPort         string `yaml:"mysql_port"`
+		MysqlDbName         string `yaml:"mysql_name"`
+		MySqlDbUser         string `yaml:"mysql_user"`
+		MySqlDbPassword     string `yaml:"mysql_password"`
+		MySqlDbRootPassword string `yaml:"mysql_root_password"`
 	} `yaml:"database"`
 }
 
 func (c *Config) Bind() {
 	c.App.Port = os.Getenv("PORT")
 
-	c.Database.MysqlDbName = os.Getenv("DATABASE_MYSQL_NAME")
-	c.Database.MySqlDbUser = os.Getenv("DATABASE_MYSQL_USER")
-	c.Database.MySqlDbPassword = os.Getenv("DATABASE_MYSQL_PASSWORD")
-	c.Database.MySqlDbRootPassword = os.Getenv("DATABASE_MYSQL_ROOT_PASSWORD")
-	c.Database.MysqlDbHost = os.Getenv("DATABASE_MYSQL_HOST")
-	c.Database.MysqlDbPort = os.Getenv("DATABASE_MYSQL_PORT")
+	c.Database.MysqlDbName = getEnv("DATABASE_MYSQL_NAME", c.Database.MysqlDbName)
+	c.Database.MySqlDbUser = getEnv("DATABASE_MYSQL_USER", c.Database.MySqlDbUser)
+	c.Database.MySqlDbPassword = getEnv("DATABASE_MYSQL_PASSWORD", c.Database.MySqlDbPassword)
+	c.Database.MySqlDbRootPassword = getEnv("DATABASE_MYSQL_ROOT_PASSWORD", c.Database.MySqlDbRootPassword)
+	c.Database.MysqlDbHost = getEnv("DATABASE_MYSQL_HOST", c.Database.MysqlDbHost)
+	c.Database.MysqlDbPort = getEnv("DATABASE_MYSQL_PORT", c.Database.MysqlDbPort)
+}
+
+// Check if os.Getenv has returned value, or using default value from config file
+func getEnv(key string, initial string) string {
+	fmt.Println("key", key, os.Getenv(key), initial)
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+
+	return initial
 }
 
 func Load() *Config {

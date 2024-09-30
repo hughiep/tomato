@@ -5,9 +5,10 @@ import (
 	"tomato/internal/api/tasks"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
-func Init() *echo.Echo {
+func SetUpRouter(db *gorm.DB) *echo.Echo {
 	// Router
 	router := echo.New()
 
@@ -19,8 +20,8 @@ func Init() *echo.Echo {
 		return c.String(200, "OK")
 	})
 
-	tasks.Router(r)
-	payment.Router(r)
+	tasks.Router(r, db)
+	payment.Router(r, db)
 
 	return router
 }

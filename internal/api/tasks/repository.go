@@ -1,27 +1,46 @@
 package tasks
 
-type TaskRepository struct{}
+import (
+	"tomato/internal/models"
 
-func NewTaskRepository() *TaskRepository {
-	return &TaskRepository{}
+	"gorm.io/gorm"
+)
+
+type TaskRepository struct {
+	DB *gorm.DB
 }
 
-func (r *TaskRepository) GetTasks() []string {
-	return []string{"task1", "task2", "task3"}
+func NewTaskRepository(db *gorm.DB) *TaskRepository {
+	return &TaskRepository{
+		DB: db,
+	}
 }
 
-func (r *TaskRepository) GetTaskByID(id int) string {
-	return "task1"
+func (r *TaskRepository) GetTasks() []models.Task {
+	var tasks []models.Task
+	r.DB.Find(&tasks)
+
+	return tasks
 }
 
-func (r *TaskRepository) CreateTask(task string) string {
-	return "task1"
+func (r *TaskRepository) GetTaskByID(id string) models.Task {
+	var task models.Task
+	r.DB.First(&task, id)
+
+	return task
 }
 
-func (r *TaskRepository) UpdateTask(id int, task string) string {
-	return "task1"
+func (r *TaskRepository) CreateTask(task models.Task) uint {
+	r.DB.Create(&task)
+
+	return task.ID
 }
 
-func (r *TaskRepository) DeleteTask(id int) string {
-	return "task1"
+func (r *TaskRepository) UpdateTask(id string, task models.Task) {
+	r.DB.Save(&task)
+}
+
+func (r *TaskRepository) DeleteTask(id string) {
+	var task models.Task
+	r.DB.Delete(&task, id)
 }
