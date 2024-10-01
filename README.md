@@ -9,6 +9,8 @@
 
 ## Running the project
 
+Copy the `.env.example` file to `.env` and fill the environment variables.
+
 ```bash
 docker-compose up --build -d
 ```
