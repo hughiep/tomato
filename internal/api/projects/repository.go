@@ -30,17 +30,30 @@ func (r *ProjectRepository) GetProjectByID(id string) models.Project {
 	return project
 }
 
-func (r *ProjectRepository) CreateProject(project models.Project) uint {
-	r.DB.Create(&project)
+func (r *ProjectRepository) CreateProject(project ProjectRequest) uint {
+	tx := r.DB.Create(&models.Project{
+		Name:        project.Name,
+		UserID:      project.UserID,
+		Description: project.Description,
+	})
 
-	return project.ID
+	return uint(tx.RowsAffected)
 }
 
-func (r *ProjectRepository) UpdateProject(id string, project models.Project) {
-	r.DB.Save(&project)
+func (r *ProjectRepository) UpdateProject(id string, project ProjectRequest) {
+	var projectModel models.Project
+	r.DB.First(&projectModel, id)
+
+	projectModel.Name = project.Name
+	projectModel.UserID = project.UserID
+	projectModel.Description = project.Description
+
+	r.DB.Save(&projectModel)
 }
 
 func (r *ProjectRepository) DeleteProject(id string) {
 	var project models.Project
-	r.DB.Delete(&project, id)
+	r.DB.First(&project, id)
+
+	r.DB.Delete(&project)
 }

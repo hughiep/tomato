@@ -87,9 +87,6 @@ func (h *PaymentHandler) Webhook(c echo.Context) error {
 		// Update user role
 		h.UserRepo.UpdateUserRole(paymentIntent.Customer.ID, models.Premium)
 
-		// Then define and call a func to handle the successful payment intent.
-		// handlePaymentIntentSucceeded(paymentIntent)
-
 	default:
 		zap.S().Infof("Unhandled event type: %s\n", event.Type)
 	}

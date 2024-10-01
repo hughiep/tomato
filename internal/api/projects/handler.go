@@ -35,37 +35,36 @@ func (h *ProjectHandler) GetProjectByID(c echo.Context) error {
 
 func (h *ProjectHandler) CreateProject(c echo.Context) error {
 	// Bind
-	project := new(models.Project)
+	project := new(ProjectRequest)
 	if err := c.Bind(project); err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, models.ValidationErrorResponse{
+			Message: "Invalid request body",
+			Errors:  err.Error(),
+		})
 	}
 
-	// Create
 	id := h.Repository.CreateProject(*project)
-
 	return c.JSON(http.StatusCreated, id)
 }
 
 func (h *ProjectHandler) UpdateProject(c echo.Context) error {
-	// Bind
 	id := c.Param("id")
-	project := new(models.Project)
+	project := new(ProjectRequest)
 	if err := c.Bind(project); err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, models.ValidationErrorResponse{
+			Message: "Invalid request body",
+			Errors:  err.Error(),
+		})
 	}
 
-	// Update
 	h.Repository.UpdateProject(id, *project)
 
-	return c.JSON(http.StatusOK, project)
+	return c.JSON(http.StatusOK, id)
 }
 
 func (h *ProjectHandler) DeleteProject(c echo.Context) error {
-	// Bind
 	id := c.Param("id")
-
-	// Delete
 	h.Repository.DeleteProject(id)
 
-	return c.JSON(http.StatusOK, id)
+	return c.NoContent(http.StatusNoContent)
 }

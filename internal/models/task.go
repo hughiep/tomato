@@ -14,6 +14,7 @@ const (
 type Task struct {
 	gorm.Model
 	Title       string     `json:"title"`
+	Description string     `json:"description"`
 	PomodoroEst uint       `json:"pomodoro_est"`
 	PomodoroAct uint       `json:"pomodoro_act"`
 	Status      TaskStatus `json:"status"`
