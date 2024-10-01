@@ -12,6 +12,7 @@ import (
 	"tomato/internal/middlewares"
 	"tomato/pkg/logger"
 
+	builtinMiddleware "github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
 )
 
@@ -31,8 +32,9 @@ func Serve() {
 	router := api.SetUpRouter(db)
 
 	// Middleware
-	// TODO: Add middleware
+	router.Use(builtinMiddleware.CORS())
 	router.Use(middlewares.ZapLogger(zap.L()))
+	router.Use(builtinMiddleware.Recover())
 
 	// Graceful shutdown
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
