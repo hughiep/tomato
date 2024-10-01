@@ -16,8 +16,8 @@ func SetUpRouter(db *gorm.DB) *echo.Echo {
 	r := router.Group("/api/v1") // API version
 
 	// Health check
-	r.GET("/health", func(c echo.Context) error {
-		return c.String(200, "OK")
+	r.GET("/ping", func(c echo.Context) error {
+		return c.String(200, "pong")
 	})
 
 	tasks.Router(r, db)

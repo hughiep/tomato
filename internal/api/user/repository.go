@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"fmt"
 	"tomato/internal/models"
 
 	"gorm.io/gorm"
@@ -23,7 +22,6 @@ func (r *UserRepository) GetUserByID(id string) (models.User, error) {
 	result := r.DB.First(&user, id)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		fmt.Println("User not found")
 		return models.User{}, result.Error
 	}
 

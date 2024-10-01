@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"tomato/internal/config"
-	"tomato/pkg/logger"
 
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -28,13 +28,14 @@ func Connect(c *config.Config) *gorm.DB {
 	dbConnection := mysql.Open(dsn)
 	db, err := gorm.Open(dbConnection, &gorm.Config{})
 	if err != nil {
-		logger.Logger.Error(dsn)
-		panic("Failed to connect to database " + dsn)
+		zap.L().Error("Failed to connect to database", zap.Error(err))
+		panic(err)
 	}
 
 	rawDB, err := db.DB()
 	if err != nil {
-		panic("Failed to get raw database")
+		zap.L().Error("Failed to get raw database")
+		panic(err)
 	}
 
 	// Set the maximum number of open connections
@@ -45,8 +46,6 @@ func Connect(c *config.Config) *gorm.DB {
 
 	// Set the maximum lifetime of a connection
 	rawDB.SetConnMaxLifetime(time.Hour)
-
-	fmt.Println("Connected to database", db, db == nil)
 
 	return db
 }

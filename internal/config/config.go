@@ -2,7 +2,6 @@ package config
 
 import (
 	"embed"
-	"fmt"
 	"log"
 	"os"
 
@@ -40,7 +39,6 @@ func (c *Config) Bind() {
 
 // Check if os.Getenv has returned value, or using default value from config file
 func getEnv(key string, initial string) string {
-	fmt.Println("key", key, os.Getenv(key), initial)
 	if value := os.Getenv(key); value != "" {
 		return value
 	}

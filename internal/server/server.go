@@ -9,16 +9,19 @@ import (
 	"tomato/internal/api"
 	"tomato/internal/config"
 	"tomato/internal/db"
+	"tomato/internal/middlewares"
 	"tomato/pkg/logger"
+
+	"go.uber.org/zap"
 )
 
-func Serve() error {
-
+func Serve() {
 	// Config
 	c := config.Load()
+
 	// Logger
-	if err := logger.Init(c); err != nil {
-		return err
+	if err := logger.Init(); err != nil {
+		panic(err)
 	}
 
 	// Database
@@ -29,6 +32,7 @@ func Serve() error {
 
 	// Middleware
 	// TODO: Add middleware
+	router.Use(middlewares.ZapLogger(zap.L()))
 
 	// Graceful shutdown
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
@@ -36,7 +40,8 @@ func Serve() error {
 
 	go func() {
 		if err := router.Start(fmt.Sprintf(":%s", c.App.Port)); err != nil {
-			router.Logger.Info("shutting down the server")
+			fmt.Println(err)
+			zap.L().Info("shutting down the server")
 		}
 	}()
 
@@ -44,9 +49,8 @@ func Serve() error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5)
 	defer cancel()
-	if err := router.Shutdown(ctx); err != nil {
-		router.Logger.Fatal(err)
-	}
 
-	return nil
+	if err := router.Shutdown(ctx); err != nil {
+		zap.L().Fatal("Server forced to shutdown:", zap.Error(err))
+	}
 }

@@ -15,6 +15,9 @@ type Task struct {
 	gorm.Model
 	Title       string     `json:"title"`
 	PomodoroEst uint       `json:"pomodoro_est"`
+	PomodoroAct uint       `json:"pomodoro_act"`
 	Status      TaskStatus `json:"status"`
 	Note        string     `json:"note"`
+	UserID      uint       `json:"user_id"`
+	ProjectID   uint       `json:"project_id"`
 }
