@@ -2,7 +2,7 @@
 
 ## Tasks
 
-[x] Projects management
-[x] Tasks management
-[x] Payment
-[ ] Authentication
+- [x] Projects management  
+- [x] Tasks management  
+- [x] Payment  
+- [ ] Authentication
