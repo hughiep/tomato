@@ -10,6 +10,14 @@ type TaskRepository struct {
 	DB *gorm.DB
 }
 
+type TaskRepositoryInterface interface {
+	GetTasks() []models.Task
+	GetTaskByID(id string) models.Task
+	CreateTask(task TaskRequest) uint
+	UpdateTask(id string, task TaskRequest)
+	DeleteTask(id string)
+}
+
 func NewTaskRepository(db *gorm.DB) *TaskRepository {
 	return &TaskRepository{
 		DB: db,

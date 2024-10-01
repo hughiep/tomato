@@ -10,6 +10,14 @@ type ProjectRepository struct {
 	DB *gorm.DB
 }
 
+type ProjectRepositoryInterface interface {
+	GetProjects() []models.Project
+	GetProjectByID(id string) models.Project
+	CreateProject(project ProjectRequest) uint
+	UpdateProject(id string, project ProjectRequest)
+	DeleteProject(id string)
+}
+
 func NewProjectRepository(db *gorm.DB) *ProjectRepository {
 	return &ProjectRepository{
 		DB: db,

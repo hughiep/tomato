@@ -11,6 +11,12 @@ type UserRepository struct {
 	DB *gorm.DB
 }
 
+type UserRepositoryInterface interface {
+	GetUserByID(id string) (models.User, error)
+	UpdateUserRole(customerId string, role models.UserRole)
+	UpdateCustomerID(id uint, customerID string)
+}
+
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{
 		DB: db,
