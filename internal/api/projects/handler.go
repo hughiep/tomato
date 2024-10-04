@@ -38,6 +38,7 @@ func (h *ProjectHandler) CreateProject(c echo.Context) error {
 	project := new(ProjectRequest)
 	if err := c.Bind(project); err != nil {
 		return c.JSON(http.StatusBadRequest, models.ValidationErrorResponse{
+			// Message này xuất hiện nhiều nên define constant
 			Message: "Invalid request body",
 			Errors:  err.Error(),
 		})
