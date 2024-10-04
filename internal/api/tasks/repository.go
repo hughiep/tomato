@@ -26,7 +26,11 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 
 func (r *TaskRepository) GetTasks() []models.Task {
 	var tasks []models.Task
-	r.DB.Find(&tasks)
+	// khi thao tác với db nên handle error
+	result := r.DB.Find(&tasks)
+	if result.Error != nil {
+		// return nil, result.Error
+	}
 
 	return tasks
 }
